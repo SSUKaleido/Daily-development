@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class RobotBool : StateMachineBehaviour
 {
+    bool IsOnce;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         if(animator.GetBool("IsWalk"))
         {
-            animator.gameObject.GetComponent<Robot>().audioSource.Play();
+            animator.transform.parent.GetComponent<Robot>().audioSource.Play();
         }
     }
 
@@ -20,7 +21,12 @@ public class RobotBool : StateMachineBehaviour
         {
             if (animator.GetCurrentAnimatorStateInfo(0).IsName("JumpScare"))
             {
-                GameManager.Instance.UIManager.FadeInStart();
+                if (!IsOnce)
+                {
+                    GameManager.Instance.UIManager.FadeOutStart();
+                    IsOnce = true;
+                }
+
             }
         }
     }
@@ -28,9 +34,9 @@ public class RobotBool : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
+        if (animator.GetBool("IsWalk"))
         {
-            animator.gameObject.GetComponent<Robot>().audioSource.Play();
+            animator.transform.parent.GetComponent<Robot>().audioSource.Stop();
         }
     }
 

@@ -11,40 +11,65 @@ public class Robot : MonoBehaviour
     Transform target;
     Animator animator;
     NavMeshAgent nav;
+    Renderer renderer;
 
     bool IsChase;
     bool IsLook;
+    bool IsCollider;
+    bool IsOnce;
+    bool IsWalk;
+    bool IsWander;
+    float currentTimer;
+    float wanderingTime = 5f;
     void NavMeshSet()
     {
-        nav.updateRotation = false;
+        
     }
 
     void DeathScene()
     {
+        GetComponent<FieldOfView>().StopFOV();
         audioSource.Stop();
         IsChase = false;
         IsLook = false;
-        nav.enabled = false;    //다른 모든 로봇 nav도 멈춰야함
-        animator.SetTrigger("DoJumpScare");
+        IsWalk = false;
+        IsWander = false;
+        nav.isStopped = true;
 
+        animator.SetTrigger("DoJumpScare");
         GameManager.Instance.playerObject.GetComponent<FirstPersonController>().enabled = false;
         GameManager.Instance.CMManager.cameraList[0].LookAt = deathCamLook;
         GameManager.Instance.CMManager.PlayScene(0);
-        GameManager.Instance.SoundManager.SetVolume((int)SOUND.SFX, 10f);
-        GameManager.Instance.SoundManager.PlayAudio((int)SOUND.SFX, (int)SFX_NAME.JUMPSCARE, false);
+        GameManager.Instance.SoundManager.SetVolume((int)SOUND.SFX, 5f);
+        GameManager.Instance.SoundManager.PlayAudio((int)SOUND.SFX, (int)SFX_NAME.JUMPSCARE, false, false);
+    }
+    void DoWandering()
+    {
+        float range = GetComponent<FieldOfView>().viewRadius;
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * range;
+
+        randomDirection += transform.position;
+        NavMeshHit navHit;
+        NavMesh.SamplePosition(randomDirection, out navHit, range, -1);
+        
+        nav.destination = navHit.position;
+
+        currentTimer = 0;
+        IsWander = true;
     }
     void Awake()
     {
         audioSource = GetComponent<AudioSource>();
         collider = GetComponent<CapsuleCollider>();
         animator = transform.GetComponentInChildren<Animator>();
+        renderer = transform.GetChild(0).GetChild(0).GetComponent<Renderer>();
         nav = GetComponent<NavMeshAgent>();
         NavMeshSet();
     }
     // Start is called before the first frame update
     void Start()
     {
-        IsLook = true;
+        DoWandering();
     }
 
     void FixedUpdate()
@@ -52,16 +77,17 @@ public class Robot : MonoBehaviour
         if (IsChase)
         {
             nav.destination = GameManager.Instance.playerObject.transform.position;
+            IsWalk = true;
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (IsChase)
+        if (IsWalk)
         {
-            animator.SetBool("IsWalk", true);
             audioSource.enabled = true;
+            animator.SetBool("IsWalk", true);
         }
         else
         {
@@ -69,28 +95,63 @@ public class Robot : MonoBehaviour
             audioSource.enabled = false;
         }
 
-        if (IsLook)
+        /*if (IsLook)
         {
-            transform.LookAt(target.position);
+            transform.LookAt(new Vector3(nav.destination.x, transform.position.y, nav.destination.z));
+        }*/
+
+        if (IsWander)
+        {
+            currentTimer += Time.deltaTime;
+            IsWalk = true;
+            IsLook = true;
+            if (nav.remainingDistance <= nav.stoppingDistance)
+            {
+                if (!nav.hasPath || nav.velocity.sqrMagnitude == 0f)
+                {
+                    Invoke("DoWandering", Random.Range(3, 6));
+                    IsWalk = false;
+                    IsWander = false;
+                }
+            }
+            if (currentTimer >= wanderingTime)
+            {
+                Invoke("DoWandering", Random.Range(3, 6));
+                IsWalk = false;
+                IsWander = false;
+            }
         }
 
-        if(transform.GetComponent<FieldOfView>().IsRecog)
+        if (transform.GetComponent<FieldOfView>().IsRecog)
         {
-            target = GameManager.Instance.playerObject.transform;
+            renderer.material.SetColor("_EmissionColor", Color.red);
             IsChase = true;
             IsLook = true;
+            IsCollider = true;
+            GameManager.Instance.UIManager.HorrorChase(transform);
+            IsOnce = false;
         }
         else
         {
+            renderer.material.SetColor("_EmissionColor", Color.white);
             IsChase = false;
-            target = null;
+            target = transform;
+            if(!IsOnce)
+            {
+                GameManager.Instance.UIManager.HorrorReset();
+                DoWandering();
+                IsOnce = true;
+            }
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject != GameManager.Instance.playerObject)
-            return;
-        DeathScene();
+        if(IsCollider)
+        {
+            if (collision.gameObject != GameManager.Instance.playerObject)
+                return;
+            DeathScene();
+        }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -30,6 +31,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void SceneMove(string name)
+    {
+        SceneManager.LoadScene(name);
+    }
+
     private void Awake()
     {
         if (_instance == null)
@@ -42,13 +53,22 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
         // 아래의 함수를 사용하여 씬이 전환되더라도 선언되었던 인스턴스가 파괴되지 않는다.
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
+        SoundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+        CMManager = GameObject.Find("CMManager").GetComponent<CMManager>();
+        UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         playerObject = GameObject.Find("Player");
         mainCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
-        SoundManager.PlayAudio((int)SOUND.BGM, (int)BGM_NAME.AMB1, true); //BGM 틀기
+        UIManager.FadeInStart();
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
     }
 }
