@@ -57,7 +57,6 @@ public class UIManager : MonoBehaviour
         {
             c.a = f;
             FadePannel.GetComponent<Image>().color = c;
-            Debug.Log(c);
             yield return null;
         }
         GameManager.Instance.Restart();
