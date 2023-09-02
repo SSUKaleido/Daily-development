@@ -10,8 +10,9 @@ public class Item : MonoBehaviour
 
     public void GetItem()
     {
-        //아이템 습득 코드
-        Destroy(gameObject);
+        GameManager.Instance.InventoryManager.AddItem(gameObject);
+        GameManager.Instance.UIManager.StartGetItemUI(ItemName);
+        gameObject.SetActive(false);
     }
     private IEnumerator Highlight()
     {
@@ -34,6 +35,7 @@ public class Item : MonoBehaviour
     {
         ItemName = gameObject.name;
         highlight = transform.GetComponentInChildren<Light>();
-        StartCoroutine("Highlight");
+        highlight.enabled = false;
+        //StartCoroutine("Highlight");
     }
 }

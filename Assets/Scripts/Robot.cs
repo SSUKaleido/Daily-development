@@ -151,7 +151,11 @@ public class Robot : MonoBehaviour
         {
             if (collision.gameObject != GameManager.Instance.playerObject)
                 return;
-            DeathScene();
+            GameManager.Instance.playerObject.GetComponent<Player>().Heart--;
+            if (GameManager.Instance.playerObject.GetComponent<Player>().Heart <= 0)
+                DeathScene();
+            else
+                GameManager.Instance.UIManager.StartGetDamaged();
         }
     }
 }

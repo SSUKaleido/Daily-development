@@ -16,6 +16,7 @@ using UnityEngine.UI;
 
 public class FirstPersonController : MonoBehaviour
 {
+    public bool IsFreeze;
     private Rigidbody rb;
 
     #region Camera Movement Variables
@@ -33,7 +34,7 @@ public class FirstPersonController : MonoBehaviour
     public bool crosshair = true;
     public Sprite crosshairImage;
     public Color crosshairColor = Color.white;
-    public float raylength = 10f;
+    float raylength = 2.5f;
 
     // Internal Variables
     private float yaw = 0.0f;
@@ -366,8 +367,10 @@ public class FirstPersonController : MonoBehaviour
             switch (hit.transform.tag)
             {
                 case "Item":
-                    //UI
-                    hit.transform.GetComponent<Item>().HighLightItem = true;
+                    GameManager.Instance.UIManager.IsItemUI = true;
+                    break;
+                case "NPC":
+                    GameManager.Instance.UIManager.IsTalkUI = true;
                     break;
             }
             if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -375,8 +378,11 @@ public class FirstPersonController : MonoBehaviour
                 switch(hit.transform.tag)
                 {
                     case "Item":
-                        Debug.Log(hit.transform.gameObject);    //UI
+                        //UI
                         hit.transform.GetComponent<Item>().GetItem();
+                        break;
+                    case "NPC":
+                        hit.transform.GetComponent<NPC>().TalkStart();
                         break;
                 }
             }

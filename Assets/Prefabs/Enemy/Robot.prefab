@@ -2066,7 +2066,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewRadius: 20
   viewAngle: 160
-  escapeTime: 5
+  escapeTime: 8
   IsRecog: 0
   targetMask:
     serializedVersion: 2

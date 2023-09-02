@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public SoundManager SoundManager;
     public CMManager CMManager;
     public UIManager UIManager;
+    public InventoryManager InventoryManager;
 
     public GameObject playerObject;
     public Camera mainCamera;
@@ -61,14 +62,19 @@ public class GameManager : MonoBehaviour
         SoundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
         CMManager = GameObject.Find("CMManager").GetComponent<CMManager>();
         UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
-        playerObject = GameObject.Find("Player");
-        mainCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
         UIManager.FadeInStart();
+        if(SceneManager.GetActiveScene().name != "Stage_Start")
+        {
+            playerObject = GameObject.Find("Player");
+            mainCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
+        }
     }
 
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape))
             Application.Quit();
+        if (Input.GetKeyDown(KeyCode.Tab))
+            UIManager.SetInventoryUI();
     }
 }
