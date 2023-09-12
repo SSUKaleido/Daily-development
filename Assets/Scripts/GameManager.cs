@@ -63,10 +63,24 @@ public class GameManager : MonoBehaviour
         CMManager = GameObject.Find("CMManager").GetComponent<CMManager>();
         UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         UIManager.FadeInStart();
-        if(SceneManager.GetActiveScene().name != "Stage_Start")
+
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "Stage_One":
+                SoundManager.currentBGM = BGM_NAME.AMB1;
+                UIManager.StartTutorialUI();
+                break;
+            case "Stage_Two":
+                SoundManager.currentBGM = BGM_NAME.AMB2;
+                playerObject.GetComponent<Player>().Wrench.SetActive(true);
+                break;
+        }
+
+        if (SceneManager.GetActiveScene().name != "Stage_Start")
         {
             playerObject = GameObject.Find("Player");
             mainCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
+            SoundManager.PlayAudio((int)SOUND.BGM, (int)SoundManager.currentBGM, true, false);
         }
     }
 

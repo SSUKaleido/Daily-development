@@ -29,14 +29,14 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public GameObject GetItem(string item)
+    public bool GetItem(string item)
     {
         foreach (var i in ItemList)
         {
             if (i.GetComponent<Item>().ItemName == item)
-                return i;
+                return true;
         }
-        return null;
+        return false;
     }
 
     void Start()

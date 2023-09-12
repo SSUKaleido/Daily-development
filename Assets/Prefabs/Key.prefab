@@ -211,12 +211,12 @@ GameObject:
   - component: {fileID: 3267743056876566145}
   - component: {fileID: 1942882583611144484}
   - component: {fileID: 4400709681115270638}
-  - component: {fileID: 4400709681115270636}
   - component: {fileID: 1149864841174473489}
   - component: {fileID: 4400709681115270637}
+  - component: {fileID: 2173645142301974608}
   m_Layer: 6
   m_Name: Key
-  m_TagString: Item
+  m_TagString: Key
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -229,7 +229,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2743407214806969403}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 3.2732978, y: 0.976, z: 48.163654}
+  m_LocalPosition: {x: 19.425, y: -5.267, z: -14.799838}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -288,20 +288,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4400709681115270636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2743407214806969403}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e4c05080b6a8c144ad24478911b55e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ItemName: 
-  HighLightItem: 0
 --- !u!114 &1149864841174473489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,6 +319,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.058462232, y: 0.13057552, z: 0.005381243}
   m_Center: {x: 0.00024982356, y: -0.0011685344, z: 0}
+--- !u!114 &2173645142301974608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2743407214806969403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d4619ae683f514fa34c642f2679e1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ItemName: "\uAC10\uC625 \uC5F4\uC1E0"
+  HighLightItem: 0
 --- !u!1 &5654351602123278852
 GameObject:
   m_ObjectHideFlags: 0

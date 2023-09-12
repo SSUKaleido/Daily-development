@@ -7,7 +7,7 @@ using UnityEngine.Rendering.Universal;
 using FirstGearGames.SmoothCameraShaker;
 using TMPro;
 
-public enum UI_TYPE { TALK, ITEM, OPENDOOR, GETITEM, DIALOG, }
+public enum UI_TYPE { TALK, ITEM, DOOR, GETITEM, DIALOG, TEXT, ATTACK }
 
 public class UIManager : MonoBehaviour
 {
@@ -29,6 +29,7 @@ public class UIManager : MonoBehaviour
 
     public bool IsTalkUI;
     public bool IsItemUI;
+    public bool IsDoorUI;
     bool IsOnce;
     bool IsScript;
 
@@ -121,6 +122,23 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private IEnumerator SetDoorUI()
+    {
+        while (true)
+        {
+            if (IsDoorUI)
+            {
+                UI[(int)UI_TYPE.DOOR].SetActive(true);
+            }
+            else
+            {
+                UI[(int)UI_TYPE.DOOR].SetActive(false);
+            }
+            IsDoorUI = false;
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
     private IEnumerator SetGetItemUI(string ItemName)
     {
         UI[(int)UI_TYPE.GETITEM].transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = ItemName + " È¹µæ";
@@ -147,6 +165,36 @@ public class UIManager : MonoBehaviour
         IsScript = true;
         UI[(int)UI_TYPE.DIALOG].SetActive(true);
         NextDialog();
+    }
+
+    public void StartTextUI(string text)
+    {
+        StartCoroutine(SetTextUI(text));
+    }
+
+    public void StartTutorialUI()
+    {
+        StartCoroutine(SetTutorialUI());
+    }
+
+    private IEnumerator SetTutorialUI()
+    {
+        Tutorial.SetActive(true);
+        yield return new WaitForSeconds(5f);
+        Tutorial.SetActive(false);
+    }
+
+    public void SetAttackUI()
+    {
+        UI[(int)UI_TYPE.ATTACK].SetActive(true);
+    }
+
+    private IEnumerator SetTextUI(string text)
+    {
+        UI[(int)UI_TYPE.TEXT].transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = text;
+        UI[(int)UI_TYPE.TEXT].SetActive(true);
+        yield return new WaitForSeconds(2f);
+        UI[(int)UI_TYPE.TEXT].SetActive(false);
     }
 
     public void StartGetDamaged()
@@ -231,7 +279,7 @@ public class UIManager : MonoBehaviour
     {
         playerObject.GetComponent<FirstPersonController>().fov = originFov;
         PPReset();
-        GameManager.Instance.SoundManager.PlayAudio((int)SOUND.BGM, (int)BGM_NAME.AMB1, true, true);
+        GameManager.Instance.SoundManager.PlayAudio((int)SOUND.BGM, (int)GameManager.Instance.SoundManager.currentBGM, true, true);
         GameManager.Instance.playerObject.GetComponent<Player>().Heart = GameManager.Instance.playerObject.GetComponent<Player>().maxHeart;
         IsOnce = false;
     }
@@ -271,6 +319,8 @@ public class UIManager : MonoBehaviour
                 StartCoroutine(SetTalkUI());
             if (UI[(int)UI_TYPE.ITEM] != null)
                 StartCoroutine(SetItemUI());
+            if (UI[(int)UI_TYPE.DOOR] != null)
+                StartCoroutine(SetDoorUI());
         }
     }
 

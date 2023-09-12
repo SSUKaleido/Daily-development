@@ -151,7 +151,7 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
-    void Start()
+    public void Start()
     {
         if(lockCursor)
         {
@@ -372,17 +372,28 @@ public class FirstPersonController : MonoBehaviour
                 case "NPC":
                     GameManager.Instance.UIManager.IsTalkUI = true;
                     break;
+                case "Key":
+                    GameManager.Instance.UIManager.IsItemUI = true;
+                    break;
+                case "Door":
+                    GameManager.Instance.UIManager.IsDoorUI = true;
+                    break;
             }
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 switch(hit.transform.tag)
                 {
                     case "Item":
-                        //UI
                         hit.transform.GetComponent<Item>().GetItem();
                         break;
                     case "NPC":
                         hit.transform.GetComponent<NPC>().TalkStart();
+                        break;
+                    case "Key":
+                        hit.transform.GetComponent<Key>().GetItem();
+                        break;
+                    case "Door":
+                        hit.transform.GetComponent<Door>().OpenDoor();
                         break;
                 }
             }
