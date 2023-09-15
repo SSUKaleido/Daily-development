@@ -7,12 +7,17 @@ public class Robot : MonoBehaviour
 {
     public Transform deathCamLook;
     public AudioSource audioSource;
+    public GameObject Explosion;
     Collider collider;
     Transform target;
     Animator animator;
     NavMeshAgent nav;
     Renderer renderer;
 
+    public bool IsHorrorChase;
+    public bool IsWandering;
+
+    bool IsStun;
     bool IsChase;
     bool IsLook;
     bool IsCollider;
@@ -21,6 +26,7 @@ public class Robot : MonoBehaviour
     bool IsWander;
     float currentTimer;
     float wanderingTime = 5f;
+    float knockbackForce = 100f;
     void NavMeshSet()
     {
         
@@ -63,13 +69,17 @@ public class Robot : MonoBehaviour
         collider = GetComponent<CapsuleCollider>();
         animator = transform.GetComponentInChildren<Animator>();
         renderer = transform.GetChild(0).GetChild(0).GetComponent<Renderer>();
+        Explosion = transform.GetChild(1).gameObject;
         nav = GetComponent<NavMeshAgent>();
         NavMeshSet();
     }
     // Start is called before the first frame update
     void Start()
     {
-        DoWandering();
+        if(IsWandering)
+        {
+            DoWandering();
+        }
     }
 
     void FixedUpdate()
@@ -95,11 +105,6 @@ public class Robot : MonoBehaviour
             audioSource.enabled = false;
         }
 
-        /*if (IsLook)
-        {
-            transform.LookAt(new Vector3(nav.destination.x, transform.position.y, nav.destination.z));
-        }*/
-
         if (IsWander)
         {
             currentTimer += Time.deltaTime;
@@ -121,28 +126,60 @@ public class Robot : MonoBehaviour
                 IsWander = false;
             }
         }
-
-        if (transform.GetComponent<FieldOfView>().IsRecog)
+        if (!IsStun)
         {
-            renderer.material.SetColor("_EmissionColor", Color.red);
-            IsChase = true;
-            IsLook = true;
-            IsCollider = true;
-            GameManager.Instance.UIManager.HorrorChase(transform);
-            IsOnce = false;
-        }
-        else
-        {
-            renderer.material.SetColor("_EmissionColor", Color.white);
-            IsChase = false;
-            target = transform;
-            if(!IsOnce)
+            if (transform.GetComponent<FieldOfView>().IsRecog)
             {
-                GameManager.Instance.UIManager.HorrorReset();
-                DoWandering();
-                IsOnce = true;
+                renderer.material.SetColor("_EmissionColor", Color.red);
+                IsChase = true;
+                IsLook = true;
+                IsCollider = true;
+                if (IsHorrorChase)
+                    GameManager.Instance.UIManager.HorrorChase(transform);
+                IsOnce = false;
+            }
+            else
+            {
+                renderer.material.SetColor("_EmissionColor", Color.white);
+                IsChase = false;
+                target = transform;
+                if (!IsOnce && IsHorrorChase)
+                {
+                    GameManager.Instance.UIManager.HorrorReset();
+                    if (IsWandering)
+                        DoWandering();
+                    IsOnce = true;
+                }
             }
         }
+    }
+    public void Stun()
+    {
+        Explosion.SetActive(true);
+        StartCoroutine(DoStun());
+    }
+
+    IEnumerator DoStun()
+    {
+        IsStun = true;
+        IsWalk = false;
+        IsWander = false;
+        IsChase = false;
+        GetComponent<FieldOfView>().enabled = false;
+        GetComponent<CapsuleCollider>().enabled = false;
+        yield return new WaitForSeconds(4f);
+        IsStun = false;
+        GetComponent<CapsuleCollider>().enabled = true;
+        GetComponent<FieldOfView>().enabled = true;
+        GetComponent<FieldOfView>().Start();
+    }
+
+    void Knockback()
+    {
+        Vector3 direction;
+        direction = new Vector3(GameManager.Instance.playerObject.transform.position.x - transform.position.x, 0, GameManager.Instance.playerObject.transform.position.z - transform.position.z);
+        Debug.Log(direction);
+        GameManager.Instance.playerObject.GetComponent<Rigidbody>().AddForce(direction * knockbackForce);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -151,7 +188,14 @@ public class Robot : MonoBehaviour
         {
             if (collision.gameObject != GameManager.Instance.playerObject)
                 return;
-            DeathScene();
+            GameManager.Instance.playerObject.GetComponent<Player>().Heart--;
+            if (GameManager.Instance.playerObject.GetComponent<Player>().Heart <= 0)
+                DeathScene();
+            else
+            {
+                //Knockback();
+                GameManager.Instance.UIManager.StartGetDamaged();
+            }
         }
     }
 }

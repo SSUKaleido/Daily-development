@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 public enum SOUND { MASTER, BGM, SFX, }
-public enum BGM_NAME { AMB1, CHASE1}
-public enum SFX_NAME { JUMPSCARE, WALK, }
+public enum BGM_NAME { AMB1, CHASE1, SIREN, AMB2, AMB3, SAFE1 }
+public enum SFX_NAME { JUMPSCARE, DOOR, ITEM, ENCOUNTER, EXPLOSION }
 
 public class SoundManager : MonoBehaviour
 {
@@ -13,6 +13,8 @@ public class SoundManager : MonoBehaviour
     public AudioSource[] audioSource;
     public AudioClip[] BGM;
     public AudioClip[] SFX;
+
+    public BGM_NAME currentBGM;
 
     public float defaultVolume;
     // Start is called before the first frame update

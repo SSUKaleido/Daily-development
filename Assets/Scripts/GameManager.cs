@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public SoundManager SoundManager;
     public CMManager CMManager;
     public UIManager UIManager;
+    public InventoryManager InventoryManager;
 
     public GameObject playerObject;
     public Camera mainCamera;
@@ -61,14 +62,38 @@ public class GameManager : MonoBehaviour
         SoundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
         CMManager = GameObject.Find("CMManager").GetComponent<CMManager>();
         UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
-        playerObject = GameObject.Find("Player");
-        mainCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
         UIManager.FadeInStart();
+
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "Stage_One":
+                SoundManager.currentBGM = BGM_NAME.AMB1;
+                UIManager.StartTutorialUI();
+                break;
+            case "Stage_Two":
+                SoundManager.currentBGM = BGM_NAME.AMB2;
+                playerObject.GetComponent<Player>().Wrench.SetActive(true);
+                break;
+            case "Stage_Final":
+                SoundManager.currentBGM = BGM_NAME.AMB3;
+                playerObject.GetComponent<Player>().IsSmash = true;
+                playerObject.GetComponent<Player>().CheckIsSmash();
+                break;
+        }
+
+        if (SceneManager.GetActiveScene().name != "Stage_Start")    //ÄÆ¾À Á¦¿Ü
+        {
+            playerObject = GameObject.Find("Player");
+            mainCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
+            SoundManager.PlayAudio((int)SOUND.BGM, (int)SoundManager.currentBGM, true, false);
+        }
     }
 
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape))
             Application.Quit();
+        if (Input.GetKeyDown(KeyCode.Tab))
+            UIManager.SetInventoryUI();
     }
 }
