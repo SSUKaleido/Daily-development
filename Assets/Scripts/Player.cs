@@ -18,12 +18,17 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        if(!IsSmash)
+        Heart = maxHeart;
+        smashCool = true;
+    }
+    public void CheckIsSmash()
+    {
+        if (!IsSmash)
         {
             Wrench.SetActive(false);
         }
-        Heart = maxHeart;
-        smashCool = true;
+        else
+            Wrench.SetActive(true);
     }
 
     IEnumerator SmashCoolTime()

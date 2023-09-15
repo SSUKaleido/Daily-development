@@ -1219,7 +1219,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71fd01a67dc915544a9a668198fc9dd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Wrench: {fileID: 0}
   maxHeart: 0
+  IsSmash: 0
 --- !u!1001 &7052986115072756436
 PrefabInstance:
   m_ObjectHideFlags: 0

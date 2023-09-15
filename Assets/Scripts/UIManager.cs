@@ -6,14 +6,18 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using FirstGearGames.SmoothCameraShaker;
 using TMPro;
+using System.Text;
 
-public enum UI_TYPE { TALK, ITEM, DOOR, GETITEM, DIALOG, TEXT, ATTACK }
+public enum UI_TYPE { TALK, ITEM, DOOR, GETITEM, DIALOG, TEXT, ATTACK, PAD, INVESTIGATE }
 
 public class UIManager : MonoBehaviour
 {
     public GameObject Tutorial;
     public GameObject FadePannel;
     public GameObject DamageUI;
+    public GameObject NumPadUI;
+    public GameObject QuizUI;
+    public GameObject TimeAttackUI;
     public GameObject[] UI;
     public ShakeData shakedata;
 
@@ -30,8 +34,16 @@ public class UIManager : MonoBehaviour
     public bool IsTalkUI;
     public bool IsItemUI;
     public bool IsDoorUI;
+    public bool IsPadUI;
+    public bool IsInvestigateUI;
+
+    bool IsHorror;
+
     bool IsOnce;
     bool IsScript;
+    bool IsQuiz;
+
+    int quizNum = -1;
 
     NPC dialogNPC;
     string[] dialogScript;
@@ -139,6 +151,40 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private IEnumerator SetPadUI()
+    {
+        while(true)
+        {
+            if(IsPadUI)
+            {
+                UI[(int)UI_TYPE.PAD].SetActive(true);
+            }
+            else
+            {
+                UI[(int)UI_TYPE.PAD].SetActive(false);
+            }
+            IsPadUI = false;
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private IEnumerator SetInvestigateUI()
+    {
+        while (true)
+        {
+            if (IsInvestigateUI)
+            {
+                UI[(int)UI_TYPE.INVESTIGATE].SetActive(true);
+            }
+            else
+            {
+                UI[(int)UI_TYPE.INVESTIGATE].SetActive(false);
+            }
+            IsInvestigateUI = false;
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
     private IEnumerator SetGetItemUI(string ItemName)
     {
         UI[(int)UI_TYPE.GETITEM].transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = ItemName + " 획득";
@@ -189,6 +235,24 @@ public class UIManager : MonoBehaviour
         UI[(int)UI_TYPE.ATTACK].SetActive(true);
     }
 
+    public void SetNumPadUI(int num)
+    {
+        NumPadUI.SetActive(true);
+        NumPadUI.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = null;
+        for (int i = 0; i < num; i++)
+        {
+            NumPadUI.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text += "*";
+        }
+    }
+
+    public void InputNumPadUI(int num, int index)
+    {
+        string tmp = NumPadUI.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text;
+        StringBuilder sb = new StringBuilder(tmp);
+        sb[index] = (char)(num + '0');
+        NumPadUI.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = sb.ToString();
+    }
+
     private IEnumerator SetTextUI(string text)
     {
         UI[(int)UI_TYPE.TEXT].transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = text;
@@ -200,6 +264,18 @@ public class UIManager : MonoBehaviour
     public void StartGetDamaged()
     {
         StartCoroutine(BloodFade());
+    }
+
+    public void SetQuizUI(int num)
+    {
+        QuizUI.transform.GetChild(num).gameObject.SetActive(true);
+        quizNum = num;
+        IsQuiz = true;
+    }
+
+    public void SetTimeAttackUI()
+    {
+        TimeAttackUI.SetActive(true);
     }
     IEnumerator BloodFade()
     {
@@ -263,6 +339,7 @@ public class UIManager : MonoBehaviour
         {
             //GameManager.Instance.playerObject.GetComponent<CameraShake>().Shake();
             GameManager.Instance.SoundManager.PlayAudio((int)SOUND.BGM, (int)BGM_NAME.CHASE1, true, true);
+            GameManager.Instance.SoundManager.PlayAudio((int)SOUND.SFX, (int)SFX_NAME.ENCOUNTER, false, false);
             IsOnce = true;
         }
         //여기서 수정한 값들은 다 초기화 해줘야함
@@ -300,7 +377,6 @@ public class UIManager : MonoBehaviour
         shakedata.MagnitudeNoise = cameraShake_OriginMagnitudeNoise;
         shakedata.Roughness = cameraShake_OriginRoughness;
     }
-
     void Awake()
     {
         
@@ -321,6 +397,10 @@ public class UIManager : MonoBehaviour
                 StartCoroutine(SetItemUI());
             if (UI[(int)UI_TYPE.DOOR] != null)
                 StartCoroutine(SetDoorUI());
+            if (UI[(int)UI_TYPE.PAD] != null)
+                StartCoroutine(SetPadUI());
+            if (UI[(int)UI_TYPE.INVESTIGATE] != null)
+                StartCoroutine(SetInvestigateUI());
         }
     }
 
@@ -331,6 +411,16 @@ public class UIManager : MonoBehaviour
         {
             if(Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter))
                 NextDialog();
+        }
+
+        if(IsQuiz)
+        {
+            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                QuizUI.transform.GetChild(quizNum).gameObject.SetActive(false);
+                quizNum = -1;
+                IsQuiz = false;
+            }
         }
     }
 }

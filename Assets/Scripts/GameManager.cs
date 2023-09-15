@@ -74,9 +74,14 @@ public class GameManager : MonoBehaviour
                 SoundManager.currentBGM = BGM_NAME.AMB2;
                 playerObject.GetComponent<Player>().Wrench.SetActive(true);
                 break;
+            case "Stage_Final":
+                SoundManager.currentBGM = BGM_NAME.AMB3;
+                playerObject.GetComponent<Player>().IsSmash = true;
+                playerObject.GetComponent<Player>().CheckIsSmash();
+                break;
         }
 
-        if (SceneManager.GetActiveScene().name != "Stage_Start")
+        if (SceneManager.GetActiveScene().name != "Stage_Start")    //ÄÆ¾À Á¦¿Ü
         {
             playerObject = GameObject.Find("Player");
             mainCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();

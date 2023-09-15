@@ -8,6 +8,9 @@ public class Trigger : MonoBehaviour
 {
     public string triggerName;
 
+    public bool IsTrap;
+
+    public GameObject TrapDoor;
     public GameObject robots;
     public GameObject Robot;
     public GameObject door;
@@ -62,11 +65,29 @@ public class Trigger : MonoBehaviour
                     break;
                 case "2":
                     door.GetComponent<Door>().StartCloseDoor();
+                    GameManager.Instance.SoundManager.currentBGM = BGM_NAME.SAFE1;
+                    GameManager.Instance.UIManager.HorrorReset();
+                    GameManager.Instance.UIManager.SetTimeAttackUI();
                     break;
                 case "3":
                     GameManager.Instance.playerObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
                     GameManager.Instance.playerObject.GetComponent<FirstPersonController>().enabled = false;
                     transform.GetChild(0).gameObject.GetComponent<PlayableDirector>().Play();
+                    break;
+                case "4":
+                    if (IsTrap)
+                        TrapDoor.SetActive(false);
+                    break;
+                case "5":
+                    GetComponent<AudioSource>().Play();
+                    break;
+                case "6":
+                    door.transform.GetComponent<Animator>().SetBool("Near", false); //¹® ´Ý±â
+                    door.transform.GetComponent<first_Door>().IsRecog = false;
+                    GameManager.Instance.UIManager.SetTimeAttackUI();
+                    break;
+                case "ending":
+                    GameManager.Instance.UIManager.FadeOutStart("Stage_End");
                     break;
             }
         }

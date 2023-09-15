@@ -34,6 +34,12 @@ public class Door : MonoBehaviour
         pivot.localRotation = Quaternion.Euler(pivot.rotation.x, 130, pivot.rotation.z);
     }
 
+    public void StartOpenDoor()
+    {
+        GetComponent<AudioSource>().Play();
+        StartCoroutine(OpenDoor2());
+    }
+
     public void StartCloseDoor()
     {
         GetComponent<AudioSource>().Play();
@@ -42,12 +48,21 @@ public class Door : MonoBehaviour
 
     private IEnumerator CloseDoor()
     {
-        for (float y = transform.position.y; y >= 0; y -= 0.1f)
+        for (float y = transform.position.y; y >= 0; y -= 0.05f)
         {
             transform.position = new Vector3(transform.position.x, y, transform.position.z);
             yield return null;
         }
         Invoke("StompSound", Random.Range(8, 10));
+    }
+
+    private IEnumerator OpenDoor2()
+    {
+        for (float y = 0; y <= 5; y += 0.05f)
+        {
+            transform.position = new Vector3(transform.position.x, y, transform.position.z);
+            yield return null;
+        }
     }
 
     void StompSound()

@@ -20,7 +20,7 @@ public class FieldOfView : MonoBehaviour
     // Target mask에 ray hit된 transform을 보관하는 리스트
     public List<Transform> visibleTargets = new List<Transform>();
 
-    void Start()
+    public void Start()
     {
         // 0.2초 간격으로 코루틴 호출
         StartCoroutine(FindTargetsWithDelay(0.1f));

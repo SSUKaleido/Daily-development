@@ -378,6 +378,12 @@ public class FirstPersonController : MonoBehaviour
                 case "Door":
                     GameManager.Instance.UIManager.IsDoorUI = true;
                     break;
+                case "NumPad":
+                    GameManager.Instance.UIManager.IsPadUI = true;
+                    break;
+                case "Quiz":
+                    GameManager.Instance.UIManager.IsInvestigateUI = true;
+                    break;
             }
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
@@ -394,6 +400,12 @@ public class FirstPersonController : MonoBehaviour
                         break;
                     case "Door":
                         hit.transform.GetComponent<Door>().OpenDoor();
+                        break;
+                    case "NumPad":
+                        hit.transform.GetComponent<NumPad>().StartInput();
+                        break;
+                    case "Quiz":
+                        hit.transform.GetComponent<Quiz>().ShowQuiz();
                         break;
                 }
             }

@@ -153,7 +153,6 @@ public class Robot : MonoBehaviour
             }
         }
     }
-
     public void Stun()
     {
         Explosion.SetActive(true);
@@ -172,6 +171,7 @@ public class Robot : MonoBehaviour
         IsStun = false;
         GetComponent<CapsuleCollider>().enabled = true;
         GetComponent<FieldOfView>().enabled = true;
+        GetComponent<FieldOfView>().Start();
     }
 
     void Knockback()

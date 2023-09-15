@@ -9,6 +9,8 @@ TagManager:
   - NPC
   - Key
   - Robot
+  - NumPad
+  - Quiz
   layers:
   - Default
   - TransparentFX
