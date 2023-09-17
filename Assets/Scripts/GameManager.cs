@@ -62,8 +62,17 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
+    void SetResolution()
+    {
+        int setWidth = 1920;
+        int setHeight = 1080;
+
+        Screen.SetResolution(setWidth, setHeight, true);
+    }
+
     private void Start()
     {
+        SetResolution();
         SoundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
         CMManager = GameObject.Find("CMManager").GetComponent<CMManager>();
         UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
@@ -93,11 +102,5 @@ public class GameManager : MonoBehaviour
             mainCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
             SoundManager.PlayAudio((int)SOUND.BGM, (int)SoundManager.currentBGM, true, false);
         }
-    }
-
-    private void Update()
-    {
-        /*if(Input.GetKeyDown(KeyCode.Escape))
-            Application.Quit();*/
     }
 }

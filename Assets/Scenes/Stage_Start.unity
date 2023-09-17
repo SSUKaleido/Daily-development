@@ -1519,6 +1519,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b52dd206c77f648b152d4577a9c156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PauseMenuUI: {fileID: 0}
   Tutorial: {fileID: 0}
   FadePannel: {fileID: 1793883034}
   DamageUI: {fileID: 0}

@@ -12,6 +12,7 @@ public enum UI_TYPE { TALK, ITEM, DOOR, GETITEM, DIALOG, TEXT, ATTACK, PAD, INVE
 
 public class UIManager : MonoBehaviour
 {
+    public GameObject PauseMenuUI;
     public GameObject Tutorial;
     public GameObject FadePannel;
     public GameObject DamageUI;
@@ -36,8 +37,6 @@ public class UIManager : MonoBehaviour
     public bool IsDoorUI;
     public bool IsPadUI;
     public bool IsInvestigateUI;
-
-    bool IsHorror;
 
     bool IsOnce;
     bool IsScript;
