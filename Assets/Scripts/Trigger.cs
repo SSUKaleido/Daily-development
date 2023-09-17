@@ -66,7 +66,6 @@ public class Trigger : MonoBehaviour
                 case "2":
                     door.GetComponent<Door>().StartCloseDoor();
                     GameManager.Instance.SoundManager.currentBGM = BGM_NAME.SAFE1;
-                    GameManager.Instance.UIManager.HorrorReset();
                     GameManager.Instance.UIManager.SetTimeAttackUI();
                     break;
                 case "3":

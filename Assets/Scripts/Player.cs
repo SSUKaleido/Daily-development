@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
             if(Input.GetMouseButton(0) && smashCool)
             {
                 StartCoroutine(SmashCoolTime());
+                Wrench.GetComponent<AudioSource>().Play();
                 Wrench.GetComponent<Animator>().SetTrigger("DoSmash");
             }
         }

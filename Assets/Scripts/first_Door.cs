@@ -28,7 +28,7 @@ public class first_Door : MonoBehaviour
     {       
         if(IsMiddle)
         {
-            if(GameManager.Instance.InventoryManager.GetItem("Item1") && GameManager.Instance.InventoryManager.GetItem("Item2"))
+            if(GameManager.Instance.InventoryManager.GetItem("큐브 조각1") && GameManager.Instance.InventoryManager.GetItem("큐브 조각2"))
             {
                 IsRecog = true;
                 IsMiddle = false;

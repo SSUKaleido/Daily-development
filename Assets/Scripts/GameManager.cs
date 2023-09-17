@@ -57,12 +57,18 @@ public class GameManager : MonoBehaviour
         //DontDestroyOnLoad(gameObject);
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
     private void Start()
     {
         SoundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
         CMManager = GameObject.Find("CMManager").GetComponent<CMManager>();
         UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
-        UIManager.FadeInStart();
+        if(SceneManager.GetActiveScene().name != "Stage_End")
+            UIManager.FadeInStart();
 
         switch (SceneManager.GetActiveScene().name)
         {
@@ -81,7 +87,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
-        if (SceneManager.GetActiveScene().name != "Stage_Start")    //ÄÆ¾À Á¦¿Ü
+        if (SceneManager.GetActiveScene().name != "Stage_Start" || SceneManager.GetActiveScene().name != "Stage_End")    //ÄÆ¾À Á¦¿Ü
         {
             playerObject = GameObject.Find("Player");
             mainCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
@@ -91,9 +97,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
-            Application.Quit();
-        if (Input.GetKeyDown(KeyCode.Tab))
-            UIManager.SetInventoryUI();
+        /*if(Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();*/
     }
 }

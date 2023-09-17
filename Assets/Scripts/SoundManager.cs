@@ -5,7 +5,7 @@ using UnityEngine.Audio;
 
 public enum SOUND { MASTER, BGM, SFX, }
 public enum BGM_NAME { AMB1, CHASE1, SIREN, AMB2, AMB3, SAFE1 }
-public enum SFX_NAME { JUMPSCARE, DOOR, ITEM, ENCOUNTER, EXPLOSION }
+public enum SFX_NAME { JUMPSCARE, DOOR, ITEM, ENCOUNTER, EXPLOSION, WHIP }
 
 public class SoundManager : MonoBehaviour
 {

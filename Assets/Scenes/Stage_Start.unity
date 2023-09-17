@@ -1524,6 +1524,7 @@ MonoBehaviour:
   DamageUI: {fileID: 0}
   NumPadUI: {fileID: 0}
   QuizUI: {fileID: 0}
+  TimeAttackUI: {fileID: 0}
   UI: []
   shakedata: {fileID: 11400000, guid: 6484cb91971a5f0488b37858428b7927, type: 2}
   vignette_OriginIntensity: 0.5
@@ -4109,7 +4110,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1544602116
 MonoBehaviour:
   m_ObjectHideFlags: 0
