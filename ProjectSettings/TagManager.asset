@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Door
   - Item
+  - NPC
+  - Key
+  - Robot
+  - NumPad
+  - Quiz
   layers:
   - Default
   - TransparentFX
@@ -17,8 +22,8 @@ TagManager:
   - Ceiling
   - Player
   - MiniMapLayer
-  - 
-  - 
+  - Door
+  - Ignore PostProcessing
   - 
   - 
   - 

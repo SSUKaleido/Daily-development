@@ -11,6 +11,11 @@ public class CMManager : MonoBehaviour
     {
         cameraList[num].GetComponent<CinemachineVirtualCamera>().enabled = true;
     }
+
+    public void StopScene(int num)
+    {
+        cameraList[num].GetComponent<CinemachineVirtualCamera>().enabled = false;
+    }
     // Start is called before the first frame update
     void Start()
     {

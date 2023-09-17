@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 public enum SOUND { MASTER, BGM, SFX, }
-public enum BGM_NAME { AMB1, }
-public enum SFX_NAME { JUMPSCARE, WALK, }
+public enum BGM_NAME { AMB1, CHASE1, SIREN, AMB2, AMB3, SAFE1 }
+public enum SFX_NAME { JUMPSCARE, DOOR, ITEM, ENCOUNTER, EXPLOSION, WHIP }
 
 public class SoundManager : MonoBehaviour
 {
@@ -13,28 +13,53 @@ public class SoundManager : MonoBehaviour
     public AudioSource[] audioSource;
     public AudioClip[] BGM;
     public AudioClip[] SFX;
+
+    public BGM_NAME currentBGM;
+
+    public float defaultVolume;
     // Start is called before the first frame update
-    void Awake()
+    public void PlayAudio(int soundType, int clipNum, bool loop, bool fade)
     {
-        
+        StartCoroutine(PlayAudioCoroutine(soundType, clipNum, loop, fade));
     }
 
-    public void PlayAudio(int soundType, int clipNum, bool loop)
+    IEnumerator PlayAudioCoroutine(int soundType, int clipNum, bool loop, bool fade)
     {
-        switch(soundType)
+        if (fade)
         {
-            case 0:
+            SetVolume(soundType, 0);
+            for (float v = 0f; v > -40; v -= 0.5f)
+            {
+                SetVolume(soundType, v);
+                yield return null;
+            }
+            SetVolume(soundType, -40);
+        }
+
+        switch (soundType)
+        {
+            case (int)SOUND.MASTER:
                 audioSource[soundType].clip = SFX[clipNum];
                 break;
-            case 1:
+            case (int)SOUND.BGM:
                 audioSource[soundType].clip = BGM[clipNum];
                 break;
-            case 2:
+            case (int)SOUND.SFX:
                 audioSource[soundType].clip = SFX[clipNum];
                 break;
         }
         audioSource[soundType].loop = loop;
         audioSource[soundType].Play();
+
+        if(fade)
+        {
+            for (float v = -40f; v < 0; v += 0.2f)
+            {
+                SetVolume(soundType, v);
+                yield return null;
+            }
+            SetVolume(soundType, 0);
+        }
     }
 
     public void SetVolume(int soundType, float volume)
@@ -52,7 +77,12 @@ public class SoundManager : MonoBehaviour
                 break;
         }
     }
-
+    void Awake()
+    {
+        audioMixer.SetFloat("Master", defaultVolume);
+        audioMixer.SetFloat("BGM", defaultVolume);
+        audioMixer.SetFloat("SFX", defaultVolume);
+    }
     // Update is called once per frame
     void Update()
     {

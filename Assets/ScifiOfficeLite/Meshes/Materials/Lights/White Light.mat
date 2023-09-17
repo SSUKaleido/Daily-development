@@ -26,10 +26,7 @@ Material:
   - _EMISSION
   - _METALLICSPECGLOSSMAP
   - _NORMALMAP
-  m_InvalidKeywords:
-  - _EMISSIVE_COLOR_MAP
-  - _METALLICGLOSSMAP
-  - _NORMALMAP_TANGENT_SPACE
+  m_InvalidKeywords: []
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0

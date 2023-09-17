@@ -8,7 +8,11 @@ public class FieldOfView : MonoBehaviour
     public float viewRadius;
     [Range(0, 360)]
     public float viewAngle;
+    public float escapeTime = 5;
     public bool IsRecog;
+
+    float originRadius;
+    float currentTimer;
 
     // 마스크 2종
     public LayerMask targetMask, obstacleMask;
@@ -16,10 +20,11 @@ public class FieldOfView : MonoBehaviour
     // Target mask에 ray hit된 transform을 보관하는 리스트
     public List<Transform> visibleTargets = new List<Transform>();
 
-    void Start()
+    public void Start()
     {
         // 0.2초 간격으로 코루틴 호출
-        StartCoroutine(FindTargetsWithDelay(0.2f));
+        StartCoroutine(FindTargetsWithDelay(0.1f));
+        originRadius = viewRadius;
     }
 
     IEnumerator FindTargetsWithDelay(float delay)
@@ -51,7 +56,21 @@ public class FieldOfView : MonoBehaviour
                 if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
                 {
                     IsRecog = true;
-                    //visibleTargets.Add(target);
+                    viewRadius = originRadius * 2;
+                    currentTimer = 0;
+                }
+                else
+                {
+                    if (dstToTarget < viewRadius)
+                        currentTimer += 0.1f;
+                    else
+                        currentTimer += 1f;
+
+                    if(currentTimer >= escapeTime)
+                    {
+                        viewRadius = originRadius;
+                        IsRecog = false;
+                    }
                 }
             }
         }
@@ -67,5 +86,12 @@ public class FieldOfView : MonoBehaviour
         }
 
         return new Vector3(Mathf.Cos((-angleDegrees + 90) * Mathf.Deg2Rad), 0, Mathf.Sin((-angleDegrees + 90) * Mathf.Deg2Rad));
+    }
+
+    public void StopFOV()
+    {
+        StopAllCoroutines();
+        IsRecog = false;
+        enabled = false;
     }
 }

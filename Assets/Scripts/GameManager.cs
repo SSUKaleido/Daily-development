@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour
     public SoundManager SoundManager;
     public CMManager CMManager;
     public UIManager UIManager;
+    public InventoryManager InventoryManager;
 
     public GameObject playerObject;
     public Camera mainCamera;
@@ -30,6 +32,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void SceneMove(string name)
+    {
+        SceneManager.LoadScene(name);
+    }
+
     private void Awake()
     {
         if (_instance == null)
@@ -42,13 +54,50 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
         // 아래의 함수를 사용하여 씬이 전환되더라도 선언되었던 인스턴스가 파괴되지 않는다.
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     private void Start()
     {
-        playerObject = GameObject.Find("Player");
-        mainCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
-        SoundManager.PlayAudio((int)SOUND.BGM, (int)BGM_NAME.AMB1, true); //BGM 틀기
+        SoundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+        CMManager = GameObject.Find("CMManager").GetComponent<CMManager>();
+        UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        if(SceneManager.GetActiveScene().name != "Stage_End")
+            UIManager.FadeInStart();
+
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "Stage_One":
+                SoundManager.currentBGM = BGM_NAME.AMB1;
+                UIManager.StartTutorialUI();
+                break;
+            case "Stage_Two":
+                SoundManager.currentBGM = BGM_NAME.AMB2;
+                playerObject.GetComponent<Player>().Wrench.SetActive(true);
+                break;
+            case "Stage_Final":
+                SoundManager.currentBGM = BGM_NAME.AMB3;
+                playerObject.GetComponent<Player>().IsSmash = true;
+                playerObject.GetComponent<Player>().CheckIsSmash();
+                break;
+        }
+
+        if (SceneManager.GetActiveScene().name != "Stage_Start" || SceneManager.GetActiveScene().name != "Stage_End")    //컷씬 제외
+        {
+            playerObject = GameObject.Find("Player");
+            mainCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
+            SoundManager.PlayAudio((int)SOUND.BGM, (int)SoundManager.currentBGM, true, false);
+        }
+    }
+
+    private void Update()
+    {
+        /*if(Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();*/
     }
 }
