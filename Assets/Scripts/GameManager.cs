@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        SetResolution();
+        //SetResolution();
         SoundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
         CMManager = GameObject.Find("CMManager").GetComponent<CMManager>();
         UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
